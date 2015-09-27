@@ -38,7 +38,7 @@
     html = oPostersTemplate({"aPosters":aPosters});
     //console.log("html =", html);
         
-    fs.writeFile('posters.html', html, function (err) {
+    fs.writeFile('output/posters.html', html, function (err) {
       if (err){ return console.log(err);}
       console.log('html > posters.html');
     });
@@ -51,8 +51,8 @@
             format: 'A4'
           }, function() {
             // continue with page setup
-            page.open("posters.html", function (status) {
-              page.render("posters.pdf", function(){
+            page.open("output/posters.html", function (status) {
+              page.render("output/posters.pdf", function(){
                 console.log("Posters sheets rendered ", status);
                 ph.exit();
               });
@@ -450,7 +450,7 @@
     var oTeachersTemplate = Handlebars.compile(page);
     var html = oTeachersTemplate({"aWorksheets":aWorksheets});
         
-    fs.writeFile('teachers.html', html, function (err) {
+    fs.writeFile('output/teachers.html', html, function (err) {
       if (err){ return console.log(err);}
       console.log('html > teachers.html');
     });
@@ -459,7 +459,7 @@
     var oWorksheetsTemplate = Handlebars.compile(page);
     html = oWorksheetsTemplate({"aWorksheets":aWorksheets});
         
-    fs.writeFile('worksheets.html', html, function (err) {
+    fs.writeFile('output/worksheets.html', html, function (err) {
       if (err){ return console.log(err);}
       console.log('html > worksheets.html');
     });
@@ -474,12 +474,12 @@
             format: 'A4'
           }, function() {
             // continue with page setup
-            page.open("teachers.html", function (status) {
-              page.render("teachers.pdf", function(){
+            page.open("output/teachers.html", function (status) {
+              page.render("output/teachers.pdf", function(){
                 console.log("Teachers sheets rendered ", status);
                   
-                page.open("worksheets.html", function (status) {
-                  page.render("worksheets.pdf", function(){
+                page.open("output/worksheets.html", function (status) {
+                  page.render("output/worksheets.pdf", function(){
                     console.log("Worksheets sheets rendered ", status);
                     ph.exit();
                   });
