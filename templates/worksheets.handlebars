@@ -1,0 +1,127 @@
+<html>
+    <head>
+          <link href="css/cpu.css" rel="stylesheet" type="text/css" media="all">
+    
+    </head>
+    <body>
+        {{#aWorksheets}}
+        <div class="worksheet">
+          <div class="printpage">
+            <h1>School as a CPU Exercise</h1>
+            
+            <h2>Worksheet ID : {{oLevel.sGrade}}/{{iSheetNumber}}</h2>
+            
+            <table class="student">
+                <tr>
+                  <th>Level</th><td>{{oLevel.sLevelName}} / {{oLevel.sGrade}}</td>
+                  <th>Sheet Number</th><td>{{iSheetNumber}}</td></tr>
+                <tr>
+                  <th>Student Name</th><td>&nbsp;</td>
+                  <th>Date</th><td>&nbsp;</td>
+                </tr>
+            </table>
+            
+            <div class="diagram">
+              <img alt="" src="cycle-3.svg">
+              <div class="box fetch">
+                <h4>Fetch</h4>
+                <p>{{oLevel.fetch}}</p>
+              </div>
+              <div class="box decode">
+                <h4>Decode</h4>
+                <p>{{oLevel.decode}}</p>
+              </div>
+              <div class="box execute">
+                <h4>Execute</h4>
+                <p>{{oLevel.execute}}</p>
+              </div>
+            </div>
+            
+            <h3>Your Program</h3>
+            <h4>Starting number {{iSheetNumber}}</h4>
+            <table>
+                <tr>
+                    <th class="ram">RAM Address</th>
+                    <th class="physical">Physical Location</th>
+                    <th>Data</th>
+                    <th>Operation</th>
+                    {{#if oLevel.gradeA}}
+                        <th>Operand</th>
+                    {{/if}}
+                    <th>Current Number</th>
+                </tr>
+                {{#aChosen}}<tr>
+                    <td>{{iStep}}</td>
+                    <td>{{sRoomName}}</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    {{#if ../oLevel.gradeA}}
+                        <td>&nbsp;</td>
+                    {{/if}}
+                    <td>&nbsp;</td>
+                </tr>{{/aChosen}}
+            </table>
+          </div>
+          <div class="printpage">
+            <div class="instructions">
+              <h2>Instruction Set</h2>
+              <table>
+                  <tr>
+                      <th>Data</th>
+                      <th>Operation</th>
+                      {{#if oLevel.gradeA}}
+                          <th>Operand</th>
+                      {{/if}}
+                  </tr>
+                  {{#aAvailableInstructions}}<tr>
+                      <td>{{sData}}</td>
+                      {{#if ../oLevel.gradeA}}
+                          <td>{{operation}}</td>
+                          <td>{{operand}}</td>
+                      {{else}}
+                          <td>{{operation}}{{operand}}</td>
+                      {{/if}}
+                  </tr>
+                  {{/aAvailableInstructions}}
+              </table>
+            </div>
+            
+            
+            {{#if oLevel.gradeA}}
+              <h2>Op Codes</h2>
+              <dt>INC</dt><dd>Increment the Current Number (add 1 to it)</dd>
+              <dt>DEC</dt><dd>Decrement the Current Number (subtract 1 from it)</dd>
+            
+            {{/if}}
+            
+            <div class="notes">
+              <h2>Notes</h2>
+              
+              <h3>All computers</h3>
+              <ul>
+                  <li>Fetch (binary data from RAM)</li>
+                  <li>Decode (that data into operations and numbers)</li>
+                  <li>Execute (the operations with the numbers)</li>
+              </ul>
+              
+              {{#if oLevel.gradeB}} 
+              <h3>All Practical Computers</h3>
+              <ul>
+                  <li>Store the operations and other data in separate memory addresses</li>
+                  <li>One operation or number in each space in RAM</li>
+                  <li>There will be an instruction which means Add (+), this will take the current number and add it to the number in the next RAM address.</li>
+              </ul>
+              {{/if}}
+              
+              {{#if oLevel.gradeA}}
+              <h3>Von Nuemann Architecture CPUs</h3>
+              <ul>
+                  <li>Data in RAM can represent instructions or numbers</li>
+              </ul>
+              {{/if}}
+            </div>
+          </div>
+        </div>
+        {{/aWorksheets}}
+    </body>
+</html>

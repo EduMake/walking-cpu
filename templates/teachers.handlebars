@@ -1,0 +1,46 @@
+<html>
+    <head>
+      <link href="css/cpu.css" rel="stylesheet" type="text/css" media="all">
+    </head>
+    <body>
+        <h1 class="teacher">School as a CPU Exercise</h1>
+        
+        {{#aWorksheets}}
+        <div class="teacher">
+            <h2>Worksheet ID : {{oLevel.sGrade}}/{{iSheetNumber}}</h2>
+            
+            <table class="student">
+                <tr><th>Student Name</th><td>&nbsp;</td></tr>
+            </table>                
+            
+            <br />
+            <table>
+                <tr>
+                    <th>RAM Address</th>
+                    <th>Physical Location</th>
+                    <th>Data</th>
+                    {{#if oLevel.gradeB}}
+                        <th>Operation</th>
+                        <th>Operand</th>
+                    {{else}}
+                        <th>Instruction</th>
+                    {{/if}}
+                    <th>Current Number</th>
+                </tr>
+                {{#aChosen}}<tr>
+                    <td>{{iStep}}</td>
+                    <td>{{sRoomName}}</td>
+                    <td>{{sData}}</td>
+                    {{#if ../oLevel.gradeB}}
+                        <td>{{#if bListOperation}}{{operation}}{{else}}&nbsp;{{/if}}</td>
+                        <td>{{#if bListOperand}}{{operand}}{{else}}&nbsp;{{/if}}</td>
+                    {{else}}
+                        <td>{{sDisplay}}</td>
+                    {{/if}}
+                    <td>{{iResult}}</td>
+                </tr>{{/aChosen}}
+            </table>
+        </div>
+        {{/aWorksheets}}
+    </body>
+</html>

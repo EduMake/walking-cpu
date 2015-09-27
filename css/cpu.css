@@ -1,0 +1,175 @@
+body {
+    width:19cm;
+    font-family:"sans serif";
+}
+
+div.worksheet {
+    font-size:16px;
+}
+
+div.printpage {
+    padding:1cm 1cm 1cm 1cm;
+}
+
+
+h1.teacher {
+    padding:2cm 1cm 0cm 1cm;
+    margin:0cm;
+}
+
+
+div.teacher {
+    font-size:12px;
+    padding:1cm 1cm 0cm 1cm;
+    page-break-inside: avoid;
+}
+
+div.teacher:nth-child(4n) {
+    page-break-after: always;
+}
+
+div.teacher:first-child {
+    padding:0cm 1cm 0cm 1cm;
+}
+
+
+div.teacher h2{
+    padding:0cm;
+    margin:0cm;
+}
+
+div.worksheet table{
+  font-size:16px;
+}
+
+div.teacher table{
+  font-size:12px;
+}
+
+
+h1{
+}
+
+table {
+    border-collapse: collapse;
+    width:100%;
+}
+
+table, td, th {
+    border: 1px solid black;
+}
+
+.worksheet th, .worksheet td {
+  padding:0.3em;
+}
+
+th, td{
+  width:20%;
+}
+
+
+.worksheet th, .worksheet td{
+  width:16%;
+}
+
+.worksheet th.ram , .worksheet td.ram{
+  width:12%;
+}
+
+.worksheet th.physical , .worksheet td.physical{
+  width:20%;
+}
+
+div.worksheet div.student th, div.worksheet div.student td{
+  width:24%;
+}
+
+
+.old div.worksheet div.diagram {
+ background-image: url('../cycle-3.svg');
+ background-repeat: no-repeat;
+ background-position: center; 
+ background-size: contain;
+ background-color:lightyellow;
+ height: 400px;
+}
+
+div.worksheet div.diagram {
+    height: 400px;
+    padding:0;
+    margin:0;
+    text-align: center;  
+}
+
+
+div.worksheet div.diagram img{
+    height: 400px;
+    width: 400px;
+}
+
+div.worksheet div.diagram div.box{
+    margin:0;
+    padding:0;
+    background-color:rgba(225,225,225,0.95);
+    border-radius:0.5em;
+    border-width:1px;
+    border-style:solid;
+    width:40%;
+    height:150px;
+    position: relative;
+    text-align: center; 
+}
+
+div.worksheet div.diagram div.box p{
+    font-size:80%;
+}
+  
+div.worksheet div.diagram div.fetch{
+    left:30%;
+    top:-350px;
+}
+
+div.worksheet div.diagram div.decode{
+    left:55%;
+    top:-330px;
+}
+
+
+div.worksheet div.diagram div.execute{
+    left:5%;
+    top: -480px;
+}
+
+div.worksheet div.diagram div h4{
+    padding:0px;
+    margin:0px;
+}
+
+div.worksheet div.notes ul{
+    font-size: 12px;
+}
+
+
+div.worksheet div.instructions table{
+    font-size: 25px;
+}
+
+div.printpage {
+    page-break-after: always;
+}
+
+div.poster h1 {
+  font-size:200%;
+  text-align:center;
+}
+
+div.poster h1.roomname {
+  font-size:500%;
+}
+
+
+div.poster h1.data {
+  font-size: 2000%;
+  padding:0px;
+  margin:0px;
+}
