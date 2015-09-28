@@ -80,8 +80,6 @@
     // TODO : Add config for the instruction sets
     // TODO : Add config for the room names
     // TODO : Add level selector config
-    // TODO : add package.json
-    // TODO : commit to github repo
     // TODO : Change variable names to Program, instruction set .....
     // TODO : Findway to render to tablet / phone interface
     
