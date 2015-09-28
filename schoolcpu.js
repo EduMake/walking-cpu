@@ -80,7 +80,6 @@
     // TODO : Add config for the instruction sets
     // TODO : Add config for the room names
     // TODO : Add level selector config
-    // TODO : Add Room Poster Printouts
     // TODO : add package.json
     // TODO : commit to github repo
     // TODO : Change variable names to Program, instruction set .....
@@ -141,8 +140,8 @@
             sStartType:"operation",
             sTemplate:"operation2col",
             fetch:"Go to the next classroom (RAM address) in 'Your Program' & read the data on the door",
-            decode:"Look up what the data on the door means in the 'Instruction Set' either an OP Code for a maths Operation or a number, depending what you expect next. Start with an operation.",
-            execute:"If you have decoded an operation keep it until you decode a number then perform that calculation. Only write the answer in the table.",
+            decode:"Look up what the data on the door means in the 'Instruction Set' either an OP Code for a maths Operation or an Operand (number), depending what you expect next. Start with an operation.",
+            execute:"If you have decoded an operation keep it until you decode an Operand (number) then perform that calculation. Only write the answer in the table.",
             aInstructions:[
                 {"operation":"+", "operand":10},
                 {"operation":"-", "operand":11},
@@ -165,8 +164,8 @@
             sStartType:"operation",
             sTemplate:"operation2col",
             fetch:"Go to the next classroom (RAM address) in 'Your Program' & read the data on the door",
-            decode:"Look up what the data on the door means in the 'Instruction Set' either an OP Code for an Operation or a number, depending what you expect next. Start with an operation.",
-            execute:"If you have decoded an operation that needs a number keep it until you decode a number then perform that calculation. Only write the answer in the table.",
+            decode:"Look up what the data on the door means in the 'Instruction Set' either an OP Code for an Operation or a number (Operand), depending what you expect next. Start with an operation.",
+            execute:"If you have decoded an operation that needs an Operand (number) keep it until you decode an Operand (number) then perform that calculation. Only write the answer in the table.",
             aInstructions:[
                 {"operation":"+", "operand":10},
                 {"operation":"-", "operand":11},
@@ -182,6 +181,8 @@
         }
     ];
     
+    /* TODO : before we start could we take the roomnames data labels and 
+    instructions and join them together and use that instead of aInstructions*/
     
     var Worksheet = {
         iInstructionSet: 0,
