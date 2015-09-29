@@ -5,6 +5,8 @@
     var Handlebars = require("handlebars");
     var fs = require('fs');
     var phantom = require('phantom');
+    var arrayShuffle = require("array-shuffle");
+    
     
     var aInstructionNames = ["A", "B", "C", "D", "E", "F", "2", "3"];
     
@@ -13,11 +15,19 @@
         ["Prototyping", "Art"],
         ["Studio 3", "German"], 
         ["Dirty Design", "MPS"],
-        ["Science Prep Room", "Learning Base 1"],
+        ["Science Lab 1", "Learning Base 1"],
         ["Learning Base 4", "Studio 1"],
         ["Multi Media 1", "Studio 2"],
         ["Studio 4", "CAD/CAM 2"]
     ];
+    
+    
+    var aNumbers = [6,6,5,3];
+    //TODO : make A* hard rather than possibly hard
+    //var aNumbers = [0,1,0,0,0];
+    var sClass = "Y11 CDM";
+    
+    
     
     var aPosters = [];
     for(var i = 0; i<aInstructionNames.length; i++) {
@@ -30,13 +40,9 @@
     }
       
     
-    console.log("aPosters =", aPosters);
-    
     page = fs.readFileSync("templates/Posters.handlebars", "utf8");
-    //console.log("page =", page);
     var oPostersTemplate = Handlebars.compile(page);
     html = oPostersTemplate({"aPosters":aPosters});
-    //console.log("html =", html);
         
     fs.writeFile('output/posters.html', html, function (err) {
       if (err){ return console.log(err);}
@@ -44,13 +50,10 @@
     });
 
     phantom.create(function (ph) {                                                          
-        //console.log("creating phantom for "+sPersonID);
         ph.createPage(function (page) {
-          //console.log("creating page for "+sPersonID);
           page.set('paperSize', {
             format: 'A4'
           }, function() {
-            // continue with page setup
             page.open("output/posters.html", function (status) {
               page.render("output/posters.pdf", function(){
                 console.log("Posters sheets rendered ", status);
@@ -62,12 +65,8 @@
     });
 
     //process.exit()
-    
-    var aNumbers = [6,6,5,1];
-    var sClass = "Y11 Options";
     var iClass = sClass.split("").reduce(function(previousValue, currentValue, index, array) {
         return index + previousValue + currentValue.charCodeAt(0);
-        //console.log("currentValue =", currentValue);
     },0);
     var mt = new Random.MT( iClass );
             
@@ -122,11 +121,24 @@
                 {"operation":"-", "operand":null},
                 {"operation":"x", "operand":null},
                 {"operation":"/", "operand":null},
-                {"operation":null, "operand":14},
-                {"operation":null, "operand":15},
+                {"operation":null, "operand":4},
+                {"operation":null, "operand":5},
                 {"operation":null, "operand":2},
                 {"operation":null, "operand":3}
-            ]
+                ]
+              
+            /*    aInstructions:[
+                {"operation":"+", "operand":10},
+                {"operation":"-", "operand":11},
+                {"operation":"x", "operand":12},
+                {"operation":"/", "operand":13},
+                {"operation":"INC", "operand":14},
+                {"operation":"DEC", "operand":15},
+                {"operation":null, "operand":2},
+                {"operation":null, "operand":3}
+            ]*/
+                
+            
         },
         {
             sLevelName:"Von Neuman",
@@ -151,7 +163,6 @@
                 {"operation":null, "operand":3}
             ]
         },
-    
         {
             sLevelName:"Proper CPU",
             sGrade:"A*",
@@ -171,16 +182,32 @@
                 {"operation":"/", "operand":13},
                 {"operation":"INC", "operand":14},
                 {"operation":"DEC", "operand":15},
-                {"operation":null, "operand":2},
-                {"operation":null, "operand":3}/*
-                {"operation":"INC", "operand":14},
-                {"operation":"jmp", "operand":15}*/
+                {"operation":"NOP", "operand":2},
+                {"operation":null, "operand":3}
+                //{"operation":"JMP", "operand":3} //TODO can jump out of range
             ]
         }
     ];
     
-    /* TODO : before we start could we take the roomnames data labels and 
-    instructions and join them together and use that instead of aInstructions*/
+    //Map the Room names, Data entries and the instructions avaiable to each level togther
+    var aLevels = aLevels.map(function(oLevel, iKey){
+        oLevel.aRoomInstructions = [];
+        
+        for(var i = 0; i<oLevel.aInstructions.length; i++) {
+            for(var j = 0; j<aRoomGroups[i].length; j++) {
+                var oRoomInstructions = clone(oLevel.aInstructions[i]);
+                //console.log("oRoomInstructions =", oRoomInstructions);
+                oRoomInstructions.sData = aInstructionNames[i];
+                oRoomInstructions.sRoomName = aRoomGroups[i][j];
+                oLevel.aRoomInstructions.push(oRoomInstructions);
+            }
+        }
+        
+        //oLevel.aRoomInstructions = arrayShuffle(oLevel.aRoomInstructions);
+        //console.log("oLevel.aRoomInstructions =", oLevel.aRoomInstructions);
+        return oLevel;
+    });
+    
     
     var Worksheet = {
         iInstructionSet: 0,
@@ -191,6 +218,7 @@
         aRandomNumbers:[],
         sCurrentOperation:"",
         sStartType:"both",
+        aInstructions:[],
         aAvailableInstructions:[],
         oLevel:{},
         aValidList:[],
@@ -199,24 +227,12 @@
             this.iInstructionSet = iInstructionSet;
             
             this.oLevel = clone(aLevels[this.iInstructionSet]);
-            var aRoomsGrouped = clone(aRoomGroups);
             
-            
-            aRoomsGrouped = aRoomsGrouped.map(function(aRs){
-                return aRs.sort(function(a,b){
-                    return (Math.round(mt.next()) % 3) - 1 ;
-                });
-            });
-            
-            this.aAvailableInstructions = this.oLevel.aInstructions.map(function(item,key){
-                    item.iAddress = key;
-                    
-                    item.aRoomNames = aRoomsGrouped[key];
-                    item.iUsed = 0;
-                    item.sData = aInstructionNames[key];
-                    return item;
-            });
-            
+            this.aAvailableInstructions = clone(this.oLevel.aRoomInstructions);
+            this.aInstructions = clone(this.oLevel.aInstructions);
+            for(var i = 0; i<this.aInstructions.length; i++) {
+              this.aInstructions[i].sData = aInstructionNames[i];
+            }
             
             this.sStartType = this.oLevel.sStartType;
             
@@ -229,25 +245,24 @@
             this.aResults[0] = this.iSheetNumber;
         },
         
-        getChosen:function()
-        {
+        getChosen:function() {
             var aFinalList = [];
             if(this.aValid.length) {
-              //console.log("this.aValid =", this.aValid);
               aFinalList = this.getLevel(this.aValid, 1, aFinalList);
-            
               this.aChosen = aFinalList; 
+            } else {
+                console.log("No Valids to be chosen");
             }
             return aFinalList;
         },
         
-        getLevel:function(aList, iLevel, aSelected)
-        {
+        getLevel:function(aList, iLevel, aSelected) {
             // TODO : hreuristic to choose best
             // TODO : or just filter the ones with duplicates out
             
             var iRandom = this.aRandomNumbers[iLevel];
             var iListLength = aList.length;
+            //var iChosen =  iRandom % iListLength;
             var iChosen =  iRandom % iListLength;
             
             var oChosen = clone(aList[iChosen]);
@@ -256,28 +271,30 @@
             
             if(aList[iChosen].aChildren.length>0)
             {
-                
                 aSelected = this.getLevel(aList[iChosen].aChildren, iLevel+1, aSelected);
             }
             return aSelected;
         },
         
-        createValidList:function() 
-        {
-            this.aValid = this.genValidList(1, this.sStartType, this.iSheetNumber, "", 0, 0); 
+        createValidList:function() {
+            this.aValid = this.genValidList(1, this.sStartType, this.iSheetNumber, "", 0, "", this.aAvailableInstructions); 
             return this.aValid;
         },   
         
-        genValidList:function(iStep, sType, iCurrVal, sCurrentOperation, iStepsMapped, iLastAddress) 
-        {
-            var aInstructionSet = this.aAvailableInstructions;
-            
-            var aValidList = aInstructionSet.filter(function(aInstruction){
-                if (aInstruction.iAddress === iLastAddress)
+        //the guts stips out invalid options
+        genValidList:function(iStep, sType, iCurrVal, sCurrentOperation, iStepsMapped, sCurrentRoom, aCurrInstrSet) {
+            //console.log("iStep =", iStep); console.log("sType =", sType); console.log("iCurrVal =", iCurrVal);console.log("sCurrentOperation =", sCurrentOperation);           console.log("iStepsMapped =", iStepsMapped);            console.log("sCurrentRoom =", sCurrentRoom);            console.log("aCurrInstrSet =", aCurrInstrSet.length);
+            var aNextValid = aCurrInstrSet.filter(function(aInstruction){
+                if (aInstruction.sRoomName === sCurrentRoom)
                 { 
                     return false;
                 }
-                    
+                return true;
+            });
+            //console.log("aNextValid =", aNextValid.length);
+            
+            //Filter down to just the room we can work with this time
+            var aValidList = aNextValid.filter(function(aInstruction){
                 // we want an operand and there isn't one (or if we don't and there is get shot of it)
                 if((sType === "operand" ) && (aInstruction.operand === null ))
                 {
@@ -289,7 +306,9 @@
                 }
                 return true;
             });
+            //console.log("aValidList =", aValidList.length);
             
+            // Do the calculations and operations for the Valid rooms this time
             var aProcessed = aValidList.map(function(line){
                     
                 var iResult = iCurrVal; 
@@ -297,11 +316,12 @@
                 var sNextType = ((sType === "both")?"both":(sType === "operation")?"operand":"operation");
                 
                 var aNewLine = clone(line);
-                aNewLine.sRoomName = aNewLine.aRoomNames[iResult % aNewLine.aRoomNames.length];
             
                 // TODO : could try putting the score tracking in here
                     
                 aNewLine.sCurrentOperation = sCurrentOperation;
+                
+                //For display purposes
                 aNewLine.bListOperation = true;
                 aNewLine.bListOperand   = true;
                 if(sType === "operation")
@@ -311,11 +331,13 @@
                     aNewLine.bListOperation = false;
                 }
                 
+                //If the room is an operation
                 if(sType === "operation")
                 {
                     aNewLine.sCurrentOperation = line.operation;
                     
                     iResult = iCurrVal;
+                    //The operations which have np Operand
                     switch(aNewLine.sCurrentOperation)
                     {
                         case "INC":
@@ -331,6 +353,7 @@
                             break;
                     }
                     
+                    
                     aNewLine.iStep = iStep;
                     aNewLine.iCurrVal = iCurrVal;
                     aNewLine.iResult = iResult;
@@ -338,12 +361,10 @@
                     aNewLine.sNextType = sNextType;
                     aNewLine.sDisplay = aNewLine.sCurrentOperation;
                     aNewLine.aChildren = [];
-                    
-                    //console.log("aNewLine =", aNewLine);
-                    
                     return aNewLine;
                 }
                 
+                //The C grade ones have Operators and operands
                 if(sType === "both")
                 {
                     aNewLine.sCurrentOperation = aNewLine.operation;
@@ -354,6 +375,7 @@
                     aNewLine.sDisplay = aNewLine.operand;
                 }
                 
+                //The calculations
                 switch(aNewLine.sCurrentOperation)
                 {
                     case "+":
@@ -368,7 +390,7 @@
                     case "/":
                         iResult = iCurrVal / aNewLine.operand;
                         break;
-                    case "jmp":
+                    case "JMP":
                         iNextStep = aNewLine.operand;
                         break;
                 }
@@ -382,6 +404,7 @@
                 return aNewLine;
             });
             
+            //Get rid of things that don't give sane answers 
             var aIntList = aProcessed.filter(function(val, index, org){
                 if (Math.round(val.iResult) !== val.iResult)
                 {
@@ -395,32 +418,35 @@
                 
                 // TODO : make this limit part of the level
                 //if (val.iResult > this.oLevel.iMaxNumber) {
-                if (val.iResult > 1000) {
+                if (val.iResult > 500) {
                     return false;
                 }
                 
+                //Would a JMP take us out of the program?
                 if(val.iNextStep >= this.iSteps)
                 { 
                     return false;
                 }
                 
                 return true;
-            });
+            });   
+            //console.log("aIntList =", aIntList.length);
             
+            aIntList = aIntList.slice(0,5);
             
-            
+            //have we stil got steps to work out
             if(iStepsMapped < this.iSteps &&  iStep < this.iSteps )
             {
                 var aListChildren = aIntList.map(function(aLine, ind, cur){
                     var aLineWChild = clone(aLine);
-                    aLineWChild.aChildren = this.genValidList(aLine.iNextStep, aLine.sNextType, aLine.iResult, aLine.sCurrentOperation, iStepsMapped +1, aLine.iAddress); 
+                    aLineWChild.aChildren = this.genValidList(aLine.iNextStep, aLine.sNextType, aLine.iResult, aLine.sCurrentOperation, iStepsMapped +1, aLine.sRoomName, aNextValid); 
                     return aLineWChild;
                 }, this);
                
                 var aListChildrenTrimmed = aListChildren.filter(function(aChildLine, ind, cur){
                     return aChildLine.aChildren.length > 0;
                 });
-                // TODO  Trim back empty branches
+                //console.log("aListChildrenTrimmed =", aListChildrenTrimmed.length);
                 return aListChildrenTrimmed;
             }
             else
@@ -433,14 +459,16 @@
     var aWorksheets = [];
     for (var iCurrLevel = 0; iCurrLevel < aNumbers.length; iCurrLevel++) {
             
-        for(var j = 0; j < aNumbers[iCurrLevel]; j++)
-        {
+        for(var j = 0; j < aNumbers[iCurrLevel]; j++) {
             var oWorksheet = Object.create(Worksheet);
             oWorksheet.init(j+1, iCurrLevel);
             var aValid = oWorksheet.createValidList();
-            //console.log("aValid =", aValid);
+            //console.log("aValid.length =", aValid.length);
             var aChosen = oWorksheet.getChosen();
             aWorksheets.push(oWorksheet);
+            console.log("Worksheet complete", iCurrLevel, j);
+            //process.exit();
+                
         }
     }
     
