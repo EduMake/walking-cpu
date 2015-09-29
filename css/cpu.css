@@ -145,15 +145,13 @@ div.worksheet div.diagram div h4{
     margin:0px;
 }
 
-div.worksheet div.notes ul{
+div.worksheet div.notes {
     font-size: 12px;
 }
-
 
 div.worksheet div.instructions table{
     font-size: 25px;
 }
-
 
 div.printpage {
     page-break-after: always;

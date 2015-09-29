@@ -1,4 +1,3 @@
-
     var Random = require( 'rng' );    
     var clone = require('clone');
     var util = require('util');
@@ -6,26 +5,73 @@
     var fs = require('fs');
     var phantom = require('phantom');
     var arrayShuffle = require("array-shuffle");
+    var ArgumentParser = require('argparse').ArgumentParser;
+
+    var parser = new ArgumentParser({
+      version: '0.0.1',
+      addHelp:true,
+      description: 'Educational exercise about the Fetch->Decode->Execute cycle'
+    });
     
+    parser.addArgument(
+      [ '-n', '--numbers' ],
+      {
+        help: "How many of each level C,B,A,A*",
+        defaultValue: "2,2,2,2",
+        dest:"numbers"
+      }
+    );
+    
+    parser.addArgument(
+      [ '-o', '--output' ],
+      {
+        help: "Output directory.",
+        defaultValue: "output",
+        dest:"outputdir"
+      }
+    );
+    
+    parser.addArgument(
+      [ '-g', '--group' ],
+      {
+        help: "Group Name",
+        defaultValue: "default",
+        dest:"groupname"
+      }
+    );
+    
+    parser.addArgument(
+      [ '-l', '--levels' ],
+      {
+        help: "Level Config Name",
+        defaultValue: "default",
+        dest:"levelconfig"
+      }
+    );
+    
+    parser.addArgument(
+      [ '-r', '--rooms' ],
+      {
+        help: "Rooms Config Name",
+        defaultValue: "default",
+        dest:"roomconfig"
+      }
+    );
+    
+    var options = parser.parseArgs();
+    console.log("options =", options);
+
+    if(!fs.existsSync(options.outputdir)) {
+      fs.mkdirSync(options.outputdir);
+    }
     
     var aInstructionNames = ["A", "B", "C", "D", "E", "F", "2", "3"];
     
-    var aRoomGroups = [
-        ["Reception", "CAD/CAM 1"], 
-        ["Prototyping", "Art"],
-        ["Studio 3", "German"], 
-        ["Dirty Design", "MPS"],
-        ["Science Lab 1", "Learning Base 1"],
-        ["Learning Base 4", "Studio 1"],
-        ["Multi Media 1", "Studio 2"],
-        ["Studio 4", "CAD/CAM 2"]
-    ];
+    var aRoomGroups = JSON.parse(fs.readFileSync("roomconfig/"+options.roomconfig+".json").toString());
     
-    
-    var aNumbers = [6,6,5,3];
+    var aNumbers = options.numbers.split(",");//[6,6,5,3];
     //TODO : make A* hard rather than possibly hard
-    //var aNumbers = [0,0,2,2];
-    var sClass = "Y11 Option";
+    var sClass = options.groupname;//"Y11 Option";
     
     var aPosters = [];
     for(var i = 0; i<aInstructionNames.length; i++) {
@@ -41,7 +87,7 @@
     var oPostersTemplate = Handlebars.compile(page);
     html = oPostersTemplate({"aPosters":aPosters});
         
-    fs.writeFile('output/posters.html', html, function (err) {
+    fs.writeFile(options.outputdir+"/posters.html", html, function (err) {
       if (err){ return console.log(err);}
       console.log('html > posters.html');
     });
@@ -51,8 +97,8 @@
           page.set('paperSize', {
             format: 'A4'
           }, function() {
-            page.open("output/posters.html", function (status) {
-              page.render("output/posters.pdf", function(){
+            page.open(options.outputdir+"/posters.html", function (status) {
+              page.render(options.outputdir+"/posters.pdf", function(){
                 console.log("Posters sheets rendered ", status);
                 ph.exit();
               });
@@ -66,116 +112,15 @@
         return index + previousValue + currentValue.charCodeAt(0);
     },0);
     var mt = new Random.MT( iClass );
-            
-    //process.exit();
-    
+                
     // TODO : Refactor Instuction Set into Levels
     // TODO : Add sorting on hardeness of the actuall maths (possibly by size of final figure)
     // TODO : limit the numer per level replacing the 500 / 1000
     // TODO : Node /jquery style options
-    // TODO : Add config for the instruction sets
-    // TODO : Add config for the room names
-    // TODO : Add level selector config
     // TODO : Change variable names to Program, instruction set .....
     // TODO : Findway to render to tablet / phone interface
     
-    var aLevels = [
-        {
-            sLevelName:"The Basic Idea",
-            sGrade:"C",
-            gradeAA: false,
-            gradeA: false,
-            gradeB: false,
-            gradeC: true,
-            iMaxNumber:100,
-            sStartType:"both",
-            sTemplate:"operation1col",
-            fetch:"Go to the next classroom (RAM address) in 'Your Program' & read the data on the door. Write it in the 'Data' column.",
-            decode:"Look up what the data on the door (OP Code) means in the 'Instruction Set'. Write it in the 'Decoded' column.",
-            execute:"Do the mathematical operation to your current number. Write the answer in the 'Current Number' column.",
-            aInstructions:[
-                {"operation":"+", "operand":2},
-                {"operation":"-", "operand":3},
-                {"operation":"x", "operand":4},
-                {"operation":"/", "operand":5},
-                {"operation":"+", "operand":4},
-                {"operation":"-", "operand":6}
-            ]
-        },
-        {
-            sLevelName:"The Idea",
-            sGrade:"B",
-            gradeAA: false,
-            gradeA: false,
-            gradeB: true,
-            gradeC: true,
-            iMaxNumber:200,
-            sStartType:"operation",
-            sTemplate:"operation1col",
-            fetch:"Go to the next classroom (RAM address) in 'Your Program' & read the data on the door. Write it in the 'Data' column.",
-            decode:"Look up what the data on the door means in the 'Instruction Set' either it is an OP Code for a maths Operation or a number. Write it in the 'Decoded' column.",
-            execute:"If you have decoded an operation keep it until you decode a number then perform that calculation. Write the answer in the 'Current Number' column.",
-            aInstructions:[
-                {"operation":null, "operand":10},
-                {"operation":null, "operand":11},
-                {"operation":null, "operand":12},
-                {"operation":null, "operand":13},
-                {"operation":"+", "operand":null},
-                {"operation":"-", "operand":null},
-                {"operation":"x", "operand":null},
-                {"operation":"/", "operand":null},
-            ]
-        },
-        {
-            sLevelName:"Von Neuman",
-            sGrade:"A",
-            gradeAA: false,
-            gradeA: true,
-            gradeB: true,
-            gradeC: true,
-            iMaxNumber:500,
-            sStartType:"operation",
-            sTemplate:"operation2col",
-            fetch:"Go to the next classroom (RAM address) in 'Your Program' & read the data on the door.  Write it in the 'Data' column.",
-            decode:"Look up what the data on the door means in the 'Instruction Set' either an OP Code for a maths Operation or an Operand (number), depending what you expect next, starting with an operation.\nWrite it in the 'Operation' or 'Operand' column.",
-            execute:"If you have decoded an operation keep it until you decode an Operand (number) then perform that calculation. Write the result in the 'Current Number' column.",
-            aInstructions:[
-                {"operation":"+", "operand":10},
-                {"operation":"-", "operand":11},
-                {"operation":"x", "operand":12},
-                {"operation":"/", "operand":13},
-                {"operation":"INC", "operand":14},
-                {"operation":"DEC", "operand":15},
-                {"operation":null, "operand":2},
-                {"operation":null, "operand":3}
-            ]
-        },
-        {
-            sLevelName:"Proper CPU",
-            sGrade:"A*",
-            gradeAA: true,
-            gradeA: true,
-            gradeB: true,
-            gradeC: true,
-            iMaxNumber:1000,
-            sStartType:"operation",
-            sTemplate:"operation2col",
-            fetch:"Go to the next classroom (RAM address) in 'Your Program' & read the data on the door.  Write it in the 'Data' column.",
-            decode:"Look up what the data on the door means in the 'Instruction Set' either an OP Code for an Operation or a number (Operand), depending what you expect next, starting with an operation.\nWrite it in the 'Operation' or 'Operand' column.",
-            execute:"If you have decoded an operation that needs an Operand (number) keep it until you decode an Operand (number) then perform that calculation. Write the result in the 'Current Number' column.",
-            aInstructions:[
-                {"operation":"+", "operand":10, "limit":1},
-                {"operation":"-", "operand":11, "limit":1},
-                {"operation":"x", "operand":12, "limit":1},
-                {"operation":"/", "operand":13, "limit":1},
-                {"operation":"INC", "operand":14},
-                {"operation":"DEC", "operand":15},
-                {"operation":"NOP", "operand":2},
-                {"operation":null, "operand":3}
-                //{"operation":"JMP", "operand":3} //TODO can jump out of range
-            ]
-        }
-    ];
+    var aLevels = JSON.parse(fs.readFileSync("levelconfig/"+options.levelconfig+".json").toString());
     
     //Map the Room names, Data entries and the instructions avaiable to each level togther
     var aLevels = aLevels.map(function(oLevel, iKey){
@@ -201,6 +146,7 @@
     
     
     var Worksheet = {
+        sGroupName:"",
         iInstructionSet: 0,
         iSheetNumber: 1,
         iSteps:6,
@@ -214,7 +160,8 @@
         oLevel:{},
         aValidList:[],
         aChosen:[],
-        init: function init(iSheetNumber, iInstructionSet) {
+        init: function init(iSheetNumber, iInstructionSet, sGroupName) {
+            this.sGroupName = sGroupName;
             this.iInstructionSet = iInstructionSet;
             
             this.oLevel = clone(aLevels[this.iInstructionSet]);
@@ -282,7 +229,6 @@
                 }
                 return true;
             });
-            //console.log("aNextValid =", aNextValid.length);
             
             //Filter down to just the room we can work with this time
             var aValidList = aNextValid.filter(function(aInstruction){
@@ -297,7 +243,6 @@
                 }
                 return true;
             });
-            //console.log("aValidList =", aValidList.length);
             
             // Do the calculations and operations for the Valid rooms this time
             var aProcessed = aValidList.map(function(line){
@@ -421,7 +366,6 @@
                 
                 return true;
             });   
-            //console.log("aIntList =", aIntList.length);
             
             aIntList = aIntList.slice(0,5);
             
@@ -437,7 +381,6 @@
                 var aListChildrenTrimmed = aListChildren.filter(function(aChildLine, ind, cur){
                     return aChildLine.aChildren.length > 0;
                 });
-                //console.log("aListChildrenTrimmed =", aListChildrenTrimmed.length);
                 return aListChildrenTrimmed;
             }
             else
@@ -452,23 +395,20 @@
             
         for(var j = 0; j < aNumbers[iCurrLevel]; j++) {
             var oWorksheet = Object.create(Worksheet);
-            oWorksheet.init(j+1, iCurrLevel);
+            oWorksheet.init(j+1, iCurrLevel, options.groupname);
             var aValid = oWorksheet.createValidList();
             //console.log("aValid.length =", aValid.length);
             var aChosen = oWorksheet.getChosen();
             aWorksheets.push(oWorksheet);
-            console.log("Worksheet complete", iCurrLevel, j);
-            //process.exit();
-                
+            console.log("Worksheet calculation complete", iCurrLevel, j);
         }
     }
     
-    
     var page = fs.readFileSync("templates/teachers.handlebars", "utf8");
     var oTeachersTemplate = Handlebars.compile(page);
-    var html = oTeachersTemplate({"aWorksheets":aWorksheets});
+    var html = oTeachersTemplate({"aWorksheets":aWorksheets, "sGroupName":options.groupname});
         
-    fs.writeFile('output/teachers.html', html, function (err) {
+    fs.writeFile(options.outputdir+"/teachers.html", html, function (err) {
       if (err){ return console.log(err);}
       console.log('html > teachers.html');
     });
@@ -477,13 +417,11 @@
     var oWorksheetsTemplate = Handlebars.compile(page);
     html = oWorksheetsTemplate({"aWorksheets":aWorksheets});
         
-    fs.writeFile('output/worksheets.html', html, function (err) {
+    fs.writeFile(options.outputdir+"/worksheets.html", html, function (err) {
       if (err){ return console.log(err);}
       console.log('html > worksheets.html');
     });
 
-    
-    
     phantom.create(function (ph) {                                                          
         //console.log("creating phantom for "+sPersonID);
         ph.createPage(function (page) {
@@ -492,12 +430,12 @@
             format: 'A4'
           }, function() {
             // continue with page setup
-            page.open("output/teachers.html", function (status) {
-              page.render("output/teachers.pdf", function(){
+            page.open(options.outputdir+"/teachers.html", function (status) {
+              page.render(options.outputdir+"/teachers.pdf", function(){
                 console.log("Teachers sheets rendered ", status);
                   
-                page.open("output/worksheets.html", function (status) {
-                  page.render("output/worksheets.pdf", function(){
+                page.open(options.outputdir+"/worksheets.html", function (status) {
+                  page.render(options.outputdir+"/worksheets.pdf", function(){
                     console.log("Worksheets sheets rendered ", status);
                     ph.exit();
                   });
@@ -507,6 +445,4 @@
           });
         });
     });
-
-    
     

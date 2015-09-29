@@ -7,7 +7,7 @@
         {{#aWorksheets}}
         <div class="worksheet">
           <div class="printpage">
-            <h1>School as a CPU Exercise</h1>
+            <h1>School as a CPU : {{sGroupName}}</h1>
             
             <h2>Worksheet ID : {{oLevel.sGrade}}/{{iSheetNumber}}</h2>
             
@@ -110,15 +110,16 @@
               </table>
             </div>
             
-            
-            {{#if oLevel.gradeA}}
-              <h2>Op Codes</h2>
-              <dt>INC</dt><dd>Increment the Current Number (add 1 to it)</dd>
-              <dt>DEC</dt><dd>Decrement the Current Number (subtract 1 from it)</dd>
-            
-            {{/if}}
-            
             <div class="notes">
+            
+              {{#if oLevel.gradeA}}
+                <h2>Op Codes - Which do not need an operand.</h2>
+                <dt>INC</dt><dd>Increment the Current Number (add 1 to it)</dd>
+                <dt>DEC</dt><dd>Decrement the Current Number (subtract 1 from it)</dd>
+                <dt>NOP</dt><dd>No Operation (Do nothing)</dd>
+              
+              {{/if}}
+            
               <h2>Notes</h2>
               
               <h3>All computers</h3>
