@@ -44,9 +44,12 @@
                     <th class="ram">RAM Address</th>
                     <th class="physical">Physical Location</th>
                     <th>Data</th>
-                    <th>Operation</th>
                     {{#if oLevel.gradeA}}
+                        <th>Operation</th>
                         <th>Operand</th>
+                    {{else}}
+                      <th>Decoded</th>
+                    
                     {{/if}}
                     <th>Current Number</th>
                 </tr>
@@ -68,14 +71,17 @@
               <table>
                   <tr>
                       <th>Data</th>
-                      <th>Operation</th>
-                      {{#if oLevel.gradeA}}
+                      
+                      {{#if oLevel.gradeB}}
+                          <th>Operation</th>
                           <th>Operand</th>
+                      {{else}}
+                          <th>Instruction</th>
                       {{/if}}
                   </tr>
                   {{#aInstructions}}<tr>
                       <td>{{sData}}</td>
-                      {{#if ../oLevel.gradeA}}
+                      {{#if ../oLevel.gradeB}}
                           <td>{{operation}}</td>
                           <td>{{operand}}</td>
                       {{else}}

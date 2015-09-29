@@ -92,16 +92,16 @@
             iMaxNumber:100,
             sStartType:"both",
             sTemplate:"operation1col",
-            fetch:"Go to the next classroom (RAM address) in 'Your Program' & read the data on the door.",
-            decode:"Look up what the data on the door (OP Code) means in the 'Instruction Set'",
-            execute:"Do the mathematical operation to your current number. Only write the answer in the table.",
+            fetch:"Go to the next classroom (RAM address) in 'Your Program' & read the data on the door. Write it in the 'Data' column.",
+            decode:"Look up what the data on the door (OP Code) means in the 'Instruction Set'. Write it in the 'Decoded' column.",
+            execute:"Do the mathematical operation to your current number. Write the answer in the 'Current Number' column.",
             aInstructions:[
-                {"operation":"+", "operand":1},
-                {"operation":"-", "operand":2},
-                {"operation":"x", "operand":3},
-                {"operation":"/", "operand":2},
+                {"operation":"+", "operand":2},
+                {"operation":"-", "operand":3},
+                {"operation":"x", "operand":4},
+                {"operation":"/", "operand":5},
                 {"operation":"+", "operand":4},
-                {"operation":"-", "operand":3}
+                {"operation":"-", "operand":6}
             ]
         },
         {
@@ -113,18 +113,19 @@
             iMaxNumber:200,
             sStartType:"operation",
             sTemplate:"operation1col",
-            fetch:"Go to the next classroom (RAM address) in 'Your Program' & read the data on the door",
-            decode:"Look up what the data on the door means in the 'Instruction Set' either it is an OP Code for a maths Operation or a number.",
-            execute:"If you have decoded an operation keep it until you decode a number then perform that calculation. Only write the answer in the table.",
+            fetch:"Go to the next classroom (RAM address) in 'Your Program' & read the data on the door. Write it in the 'Data' column.",
+            decode:"Look up what the data on the door means in the 'Instruction Set' either it is an OP Code for a maths Operation or a number. Write it in the 'Decoded' column.",
+            execute:"If you have decoded an operation keep it until you decode a number then perform that calculation. Write the answer in the 'Current Number' column.",
             aInstructions:[
+                {"operation":null, "operand":10},
+                {"operation":null, "operand":11},
+                {"operation":null, "operand":12},
+                {"operation":null, "operand":13},
                 {"operation":"+", "operand":null},
                 {"operation":"-", "operand":null},
                 {"operation":"x", "operand":null},
                 {"operation":"/", "operand":null},
-                {"operation":null, "operand":4},
-                {"operation":null, "operand":5},
-                {"operation":null, "operand":2},
-                {"operation":null, "operand":3}
+                
                 ]
               
             /*    aInstructions:[
@@ -149,9 +150,9 @@
             iMaxNumber:500,
             sStartType:"operation",
             sTemplate:"operation2col",
-            fetch:"Go to the next classroom (RAM address) in 'Your Program' & read the data on the door",
-            decode:"Look up what the data on the door means in the 'Instruction Set' either an OP Code for a maths Operation or an Operand (number), depending what you expect next. Start with an operation.",
-            execute:"If you have decoded an operation keep it until you decode an Operand (number) then perform that calculation. Only write the answer in the table.",
+            fetch:"Go to the next classroom (RAM address) in 'Your Program' & read the data on the door.  Write it in the 'Data' column.",
+            decode:"Look up what the data on the door means in the 'Instruction Set' either an OP Code for a maths Operation or an Operand (number), depending what you expect next. Write it in the 'Operation' or 'Operand' column. Start with an operation.",
+            execute:"If you have decoded an operation keep it until you decode an Operand (number) then perform that calculation. Write the answer in the table.",
             aInstructions:[
                 {"operation":"+", "operand":10},
                 {"operation":"-", "operand":11},
@@ -172,8 +173,8 @@
             iMaxNumber:1000,
             sStartType:"operation",
             sTemplate:"operation2col",
-            fetch:"Go to the next classroom (RAM address) in 'Your Program' & read the data on the door",
-            decode:"Look up what the data on the door means in the 'Instruction Set' either an OP Code for an Operation or a number (Operand), depending what you expect next. Start with an operation.",
+            fetch:"Go to the next classroom (RAM address) in 'Your Program' & read the data on the door.  Write it in the 'Data' column.",
+            decode:"Look up what the data on the door means in the 'Instruction Set' either an OP Code for an Operation or a number (Operand), depending what you expect next. Write it in the 'Operation' or 'Operand' column. Start with an operation.",
             execute:"If you have decoded an operation that needs an Operand (number) keep it until you decode an Operand (number) then perform that calculation. Only write the answer in the table.",
             aInstructions:[
                 {"operation":"+", "operand":10},
@@ -182,8 +183,8 @@
                 {"operation":"/", "operand":13},
                 {"operation":"INC", "operand":14},
                 {"operation":"DEC", "operand":15},
-                {"operation":"NOP", "operand":2},
-                {"operation":null, "operand":3}
+                //{"operation":"NOP", "operand":2},
+                //{"operation":null, "operand":3}
                 //{"operation":"JMP", "operand":3} //TODO can jump out of range
             ]
         }
