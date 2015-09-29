@@ -154,6 +154,7 @@ div.worksheet div.instructions table{
     font-size: 25px;
 }
 
+
 div.printpage {
     page-break-after: always;
 }
@@ -173,3 +174,12 @@ div.poster h1.data {
   padding:0px;
   margin:0px;
 }
+
+td.firstnumber{
+  background-color:rgba(225,225,225,0.95);
+}
+
+/*td.blocked {
+  background-color: black; 
+}*/
+

@@ -24,10 +24,8 @@
     
     var aNumbers = [6,6,5,3];
     //TODO : make A* hard rather than possibly hard
-    //var aNumbers = [0,1,0,0,0];
-    var sClass = "Y11 CDM";
-    
-    
+    //var aNumbers = [0,0,2,2];
+    var sClass = "Y11 Option";
     
     var aPosters = [];
     for(var i = 0; i<aInstructionNames.length; i++) {
@@ -38,7 +36,6 @@
             });
         }
     }
-      
     
     page = fs.readFileSync("templates/Posters.handlebars", "utf8");
     var oPostersTemplate = Handlebars.compile(page);
@@ -86,6 +83,7 @@
         {
             sLevelName:"The Basic Idea",
             sGrade:"C",
+            gradeAA: false,
             gradeA: false,
             gradeB: false,
             gradeC: true,
@@ -107,6 +105,7 @@
         {
             sLevelName:"The Idea",
             sGrade:"B",
+            gradeAA: false,
             gradeA: false,
             gradeB: true,
             gradeC: true,
@@ -125,25 +124,12 @@
                 {"operation":"-", "operand":null},
                 {"operation":"x", "operand":null},
                 {"operation":"/", "operand":null},
-                
-                ]
-              
-            /*    aInstructions:[
-                {"operation":"+", "operand":10},
-                {"operation":"-", "operand":11},
-                {"operation":"x", "operand":12},
-                {"operation":"/", "operand":13},
-                {"operation":"INC", "operand":14},
-                {"operation":"DEC", "operand":15},
-                {"operation":null, "operand":2},
-                {"operation":null, "operand":3}
-            ]*/
-                
-            
+            ]
         },
         {
             sLevelName:"Von Neuman",
             sGrade:"A",
+            gradeAA: false,
             gradeA: true,
             gradeB: true,
             gradeC: true,
@@ -151,8 +137,8 @@
             sStartType:"operation",
             sTemplate:"operation2col",
             fetch:"Go to the next classroom (RAM address) in 'Your Program' & read the data on the door.  Write it in the 'Data' column.",
-            decode:"Look up what the data on the door means in the 'Instruction Set' either an OP Code for a maths Operation or an Operand (number), depending what you expect next. Write it in the 'Operation' or 'Operand' column. Start with an operation.",
-            execute:"If you have decoded an operation keep it until you decode an Operand (number) then perform that calculation. Write the answer in the table.",
+            decode:"Look up what the data on the door means in the 'Instruction Set' either an OP Code for a maths Operation or an Operand (number), depending what you expect next, starting with an operation.\nWrite it in the 'Operation' or 'Operand' column.",
+            execute:"If you have decoded an operation keep it until you decode an Operand (number) then perform that calculation. Write the result in the 'Current Number' column.",
             aInstructions:[
                 {"operation":"+", "operand":10},
                 {"operation":"-", "operand":11},
@@ -167,6 +153,7 @@
         {
             sLevelName:"Proper CPU",
             sGrade:"A*",
+            gradeAA: true,
             gradeA: true,
             gradeB: true,
             gradeC: true,
@@ -174,17 +161,17 @@
             sStartType:"operation",
             sTemplate:"operation2col",
             fetch:"Go to the next classroom (RAM address) in 'Your Program' & read the data on the door.  Write it in the 'Data' column.",
-            decode:"Look up what the data on the door means in the 'Instruction Set' either an OP Code for an Operation or a number (Operand), depending what you expect next. Write it in the 'Operation' or 'Operand' column. Start with an operation.",
-            execute:"If you have decoded an operation that needs an Operand (number) keep it until you decode an Operand (number) then perform that calculation. Only write the answer in the table.",
+            decode:"Look up what the data on the door means in the 'Instruction Set' either an OP Code for an Operation or a number (Operand), depending what you expect next, starting with an operation.\nWrite it in the 'Operation' or 'Operand' column.",
+            execute:"If you have decoded an operation that needs an Operand (number) keep it until you decode an Operand (number) then perform that calculation. Write the result in the 'Current Number' column.",
             aInstructions:[
-                {"operation":"+", "operand":10},
-                {"operation":"-", "operand":11},
-                {"operation":"x", "operand":12},
-                {"operation":"/", "operand":13},
+                {"operation":"+", "operand":10, "limit":1},
+                {"operation":"-", "operand":11, "limit":1},
+                {"operation":"x", "operand":12, "limit":1},
+                {"operation":"/", "operand":13, "limit":1},
                 {"operation":"INC", "operand":14},
                 {"operation":"DEC", "operand":15},
-                //{"operation":"NOP", "operand":2},
-                //{"operation":null, "operand":3}
+                {"operation":"NOP", "operand":2},
+                {"operation":null, "operand":3}
                 //{"operation":"JMP", "operand":3} //TODO can jump out of range
             ]
         }
@@ -195,7 +182,10 @@
         oLevel.aRoomInstructions = [];
         
         for(var i = 0; i<oLevel.aInstructions.length; i++) {
-            for(var j = 0; j<aRoomGroups[i].length; j++) {
+            if(typeof oLevel.aInstructions[i].limit === "undefined") {
+              oLevel.aInstructions[i].limit = aRoomGroups[i].length;
+            }
+            for(var j = 0; j<oLevel.aInstructions[i].limit; j++) {
                 var oRoomInstructions = clone(oLevel.aInstructions[i]);
                 //console.log("oRoomInstructions =", oRoomInstructions);
                 oRoomInstructions.sData = aInstructionNames[i];

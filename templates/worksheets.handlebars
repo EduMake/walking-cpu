@@ -38,7 +38,6 @@
             </div>
             
             <h3>Your Program</h3>
-            <h4>Starting number {{iSheetNumber}}</h4>
             <table>
                 <tr>
                     <th class="ram">RAM Address</th>
@@ -53,13 +52,32 @@
                     {{/if}}
                     <th>Current Number</th>
                 </tr>
+                <tr>
+                  <td>0</td>
+                  <td class="firstnumber" colspan="{{#if oLevel.gradeA}}4{{else}}3{{/if}}">First Number</td>
+                  <td >
+                   {{iSheetNumber}}
+                  </td>
+                </tr>
                 {{#aChosen}}<tr>
                     <td>{{iStep}}</td>
                     <td>{{sRoomName}}</td>
                     <td>&nbsp;</td>
-                    <td>&nbsp;</td>
                     {{#if ../oLevel.gradeA}}
+                        {{#if ../oLevel.gradeAA}}
+                           <td>&nbsp;</td>
+                        {{else}}
+                            <td {{#if bListOperand}}class="blocked"{{/if}}>&nbsp;</td>
+                        {{/if}}
+                    {{else}}
                         <td>&nbsp;</td>
+                    {{/if}}
+                    {{#if ../oLevel.gradeA}}
+                        {{#if ../oLevel.gradeAA}}
+                           <td>&nbsp;</td>
+                        {{else}}
+                            <td {{#if bListOperation}}class="blocked"{{/if}}>&nbsp;</td>
+                        {{/if}}
                     {{/if}}
                     <td>&nbsp;</td>
                 </tr>{{/aChosen}}
