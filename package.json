@@ -1,17 +1,17 @@
 {
   "name": "walking-cpu",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Educational exercise about the Fetch Decode Execute cycle",
   "main": "schoolcpu.js",
   "dependencies": {
-    "clone": "~0.1.15",
-    "mustache": "~0.8.1",
-    "handlebars": "~2.0.0-alpha.4",
-    "rng": "~0.2.2",
-    "phantom": "~0.8.0",
-    "pdfkit": "~0.6.2",
-    "array-shuffle": "~1.0.0",
-    "argparse": "~1.0.2"
+    "argparse": "^1.0.7",
+    "array-shuffle": "^1.0.1",
+    "clone": "^1.0.2",
+    "handlebars": "^4.0.5",
+    "mustache": "^2.2.1",
+    "pdfkit": "^0.8.0",
+    "phantom": "^2.1.21",
+    "rng": "^0.2.2"
   },
   "devDependencies": {},
   "scripts": {

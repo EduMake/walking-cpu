@@ -58,6 +58,15 @@
       }
     );
     
+    parser.addArgument(
+      [ '-p', '--pdf' ],
+      {
+        help: "Make PDFs",
+        action:"storeTrue",
+        dest:"pdf"
+      }
+    );
+    
     var options = parser.parseArgs();
     console.log("options =", options);
 
@@ -92,21 +101,23 @@
       console.log('html > posters.html');
     });
 
-    phantom.create(function (ph) {                                                          
-        ph.createPage(function (page) {
-          page.set('paperSize', {
-            format: 'A4'
-          }, function() {
-            page.open(options.outputdir+"/posters.html", function (status) {
-              page.render(options.outputdir+"/posters.pdf", function(){
-                console.log("Posters sheets rendered ", status);
-                ph.exit();
+    if(options.pdf){
+      phantom.create(function (ph) {                                                          
+          ph.createPage(function (page) {
+            page.set('paperSize', {
+              format: 'A4'
+            }, function() {
+              page.open(options.outputdir+"/posters.html", function (status) {
+                page.render(options.outputdir+"/posters.pdf", function(){
+                  console.log("Posters sheets rendered ", status);
+                  ph.exit();
+                });
               });
             });
           });
-        });
-    });
-
+      });
+    }
+    
     //process.exit()
     var iClass = sClass.split("").reduce(function(previousValue, currentValue, index, array) {
         return index + previousValue + currentValue.charCodeAt(0);
@@ -422,27 +433,28 @@
       console.log('html > worksheets.html');
     });
 
-    phantom.create(function (ph) {                                                          
-        //console.log("creating phantom for "+sPersonID);
-        ph.createPage(function (page) {
-          //console.log("creating page for "+sPersonID);
-          page.set('paperSize', {
-            format: 'A4'
-          }, function() {
-            // continue with page setup
-            page.open(options.outputdir+"/teachers.html", function (status) {
-              page.render(options.outputdir+"/teachers.pdf", function(){
-                console.log("Teachers sheets rendered ", status);
-                  
-                page.open(options.outputdir+"/worksheets.html", function (status) {
-                  page.render(options.outputdir+"/worksheets.pdf", function(){
-                    console.log("Worksheets sheets rendered ", status);
-                    ph.exit();
+    if(options.pdf){
+      phantom.create(function (ph) {                                                          
+          //console.log("creating phantom for "+sPersonID);
+          ph.createPage(function (page) {
+            //console.log("creating page for "+sPersonID);
+            page.set('paperSize', {
+              format: 'A4'
+            }, function() {
+              // continue with page setup
+              page.open(options.outputdir+"/teachers.html", function (status) {
+                page.render(options.outputdir+"/teachers.pdf", function(){
+                  console.log("Teachers sheets rendered ", status);
+                    
+                  page.open(options.outputdir+"/worksheets.html", function (status) {
+                    page.render(options.outputdir+"/worksheets.pdf", function(){
+                      console.log("Worksheets sheets rendered ", status);
+                      ph.exit();
+                    });
                   });
                 });
               });
             });
           });
-        });
-    });
-    
+      });
+    }
