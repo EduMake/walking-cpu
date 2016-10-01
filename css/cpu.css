@@ -1,10 +1,10 @@
 body {
-    width:19cm;
+    width:15cm;
     font-family:"sans serif";
 }
 
 div.worksheet {
-    font-size:14px;
+    font-size:11px;
 }
 
 div.printpage {
@@ -19,13 +19,12 @@ h1.teacher {
 
 
 div.teacher {
-    font-size:12px;
+    font-size:10px;
     padding:1cm 1cm 0cm 1cm;
     page-break-inside: avoid;
 }
 
 div.teacher:nth-child(4n) {
-    page-break-after: always;
 }
 
 div.teacher:first-child {
@@ -39,11 +38,11 @@ div.teacher h2{
 }
 
 div.worksheet table{
-  font-size:14px;
+  font-size:10px;
 }
 
 div.teacher table{
-  font-size:12px;
+  font-size:10px;
 }
 
 
@@ -95,7 +94,7 @@ div.worksheet div.student th, div.worksheet div.student td{
 }
 
 div.worksheet div.diagram {
-    height: 400px;
+    height: 300px;
     padding:0;
     margin:0;
     text-align: center;  
@@ -103,8 +102,8 @@ div.worksheet div.diagram {
 
 
 div.worksheet div.diagram img{
-    height: 400px;
-    width: 400px;
+    height: 300px;
+    width: 300px;
 }
 
 div.worksheet div.diagram div.box{
@@ -115,7 +114,7 @@ div.worksheet div.diagram div.box{
     border-width:1px;
     border-style:solid;
     width:40%;
-    height:150px;
+    height:120px;
     position: relative;
     text-align: center; 
 }
@@ -126,18 +125,18 @@ div.worksheet div.diagram div.box p{
   
 div.worksheet div.diagram div.fetch{
     left:30%;
-    top:-350px;
+    top:-290px;
 }
 
 div.worksheet div.diagram div.decode{
     left:55%;
-    top:-330px;
+    top:-250px;
 }
 
 
 div.worksheet div.diagram div.execute{
     left:5%;
-    top: -480px;
+    top: -370px;
 }
 
 div.worksheet div.diagram div h4{
@@ -150,7 +149,7 @@ div.worksheet div.notes {
 }
 
 div.worksheet div.instructions table{
-    font-size: 22px;
+    font-size: 15px;
 }
 
 div.printpage {
@@ -168,7 +167,7 @@ div.poster h1.roomname {
 
 
 div.poster h1.data {
-  font-size: 2000%;
+  font-size: 1500%;
   padding:0px;
   margin:0px;
 }

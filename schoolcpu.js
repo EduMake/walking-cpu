@@ -3,12 +3,11 @@
     var util = require('util');
     var Handlebars = require("handlebars");
     var fs = require('fs');
-    var phantom = require('phantom');
     var arrayShuffle = require("array-shuffle");
     var ArgumentParser = require('argparse').ArgumentParser;
 
     var parser = new ArgumentParser({
-      version: '0.0.1',
+      version: '0.0.3',
       addHelp:true,
       description: 'Educational exercise about the Fetch->Decode->Execute cycle'
     });
@@ -35,7 +34,7 @@
       [ '-g', '--group' ],
       {
         help: "Group Name",
-        defaultValue: "default",
+        defaultValue: "",
         dest:"groupname"
       }
     );
@@ -94,29 +93,12 @@
     
     page = fs.readFileSync("templates/Posters.handlebars", "utf8");
     var oPostersTemplate = Handlebars.compile(page);
-    html = oPostersTemplate({"aPosters":aPosters});
+    var PostersHtml = oPostersTemplate({"aPosters":aPosters});
         
-    fs.writeFile(options.outputdir+"/posters.html", html, function (err) {
+    fs.writeFile(options.outputdir+"/posters.html", PostersHtml, function (err) {
       if (err){ return console.log(err);}
       console.log('html > posters.html');
     });
-
-    if(options.pdf){
-      phantom.create(function (ph) {                                                          
-          ph.createPage(function (page) {
-            page.set('paperSize', {
-              format: 'A4'
-            }, function() {
-              page.open(options.outputdir+"/posters.html", function (status) {
-                page.render(options.outputdir+"/posters.pdf", function(){
-                  console.log("Posters sheets rendered ", status);
-                  ph.exit();
-                });
-              });
-            });
-          });
-      });
-    }
     
     //process.exit()
     var iClass = sClass.split("").reduce(function(previousValue, currentValue, index, array) {
@@ -417,44 +399,45 @@
     
     var page = fs.readFileSync("templates/teachers.handlebars", "utf8");
     var oTeachersTemplate = Handlebars.compile(page);
-    var html = oTeachersTemplate({"aWorksheets":aWorksheets, "sGroupName":options.groupname});
+    var TeachersHtml = oTeachersTemplate({"aWorksheets":aWorksheets, "sGroupName":options.groupname});
         
-    fs.writeFile(options.outputdir+"/teachers.html", html, function (err) {
+    fs.writeFile(options.outputdir+"/teachers.html", TeachersHtml, function (err) {
       if (err){ return console.log(err);}
       console.log('html > teachers.html');
     });
 
     page = fs.readFileSync("templates/worksheets.handlebars", "utf8");
     var oWorksheetsTemplate = Handlebars.compile(page);
-    html = oWorksheetsTemplate({"aWorksheets":aWorksheets});
+    var WorksheetsHtml = oWorksheetsTemplate({"aWorksheets":aWorksheets});
         
-    fs.writeFile(options.outputdir+"/worksheets.html", html, function (err) {
+    fs.writeFile(options.outputdir+"/worksheets.html", WorksheetsHtml, function (err) {
       if (err){ return console.log(err);}
       console.log('html > worksheets.html');
     });
 
+      
     if(options.pdf){
-      phantom.create(function (ph) {                                                          
-          //console.log("creating phantom for "+sPersonID);
-          ph.createPage(function (page) {
-            //console.log("creating page for "+sPersonID);
-            page.set('paperSize', {
-              format: 'A4'
-            }, function() {
-              // continue with page setup
-              page.open(options.outputdir+"/teachers.html", function (status) {
-                page.render(options.outputdir+"/teachers.pdf", function(){
-                  console.log("Teachers sheets rendered ", status);
-                    
-                  page.open(options.outputdir+"/worksheets.html", function (status) {
-                    page.render(options.outputdir+"/worksheets.pdf", function(){
-                      console.log("Worksheets sheets rendered ", status);
-                      ph.exit();
-                    });
-                  });
-                });
-              });
-            });
-          });
+      var cwd = process.cwd();
+      console.log(cwd);
+      var pdf = require('html-pdf');
+      var PrintOptions = { 
+        format: 'A4',
+        base: "file://"+cwd+"/output/"
+         };
+      
+      pdf.create(PostersHtml, PrintOptions).toFile(options.outputdir+"/posters.pdf", function(err, res) {
+        if (err) return console.log(err);
+        console.log(res); 
       });
+      
+      pdf.create(WorksheetsHtml, PrintOptions).toFile(options.outputdir+"/worksheets.pdf", function(err, res) {
+        if (err) return console.log(err);
+        console.log(res); 
+      });
+      
+      pdf.create(TeachersHtml, PrintOptions).toFile(options.outputdir+"/teachers.pdf", function(err, res) {
+        if (err) return console.log(err);
+        console.log(res); 
+      });
+
     }
