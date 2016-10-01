@@ -4,7 +4,7 @@ body {
 }
 
 div.worksheet {
-    font-size:16px;
+    font-size:14px;
 }
 
 div.printpage {
@@ -39,7 +39,7 @@ div.teacher h2{
 }
 
 div.worksheet table{
-  font-size:16px;
+  font-size:14px;
 }
 
 div.teacher table{
@@ -150,7 +150,7 @@ div.worksheet div.notes {
 }
 
 div.worksheet div.instructions table{
-    font-size: 25px;
+    font-size: 22px;
 }
 
 div.printpage {
