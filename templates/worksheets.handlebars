@@ -1,13 +1,12 @@
 <html>
     <head>
           <link href="../css/cpu.css" rel="stylesheet" type="text/css" media="all">
-    
     </head>
     <body>
         {{#aWorksheets}}
         <div class="worksheet">
           <div class="printpage">
-            <h1>School as a CPU : {{sGroupName}}</h1>
+            <h1>Walking CPU : {{sGroupName}}</h1>
             
             <h2>Worksheet ID : {{oLevel.sGrade}}/{{iSheetNumber}}</h2>
             
@@ -40,7 +39,7 @@
             <h3>Your Program</h3>
             <table>
                 <tr>
-                    <th class="ram">RAM Address</th>
+                    <th class="ram">{{#if oLevel.gradeA}}Program Counter{{else}}RAM Address{{/if}}</th>
                     <th class="physical">Physical Location</th>
                     <th>Data</th>
                     {{#if oLevel.gradeA}}
@@ -50,7 +49,7 @@
                       <th>Decoded</th>
                     
                     {{/if}}
-                    <th>Current Number</th>
+                    <th>{{#if oLevel.gradeA}}Accumulator{{else}}Current Number{{/if}}</th>
                 </tr>
                 <tr>
                   <td>0</td>
@@ -130,12 +129,24 @@
               </ul>
               
               {{#if oLevel.gradeB}} 
-              <h3>All Practical Computers</h3>
-              <ul>
-                  <li>Store the operations and other data in separate memory addresses</li>
-                  <li>One operation or number in each space in RAM</li>
-                  <li>There will be an instruction which means Add (+), this will take the current number and add it to the number in the next RAM address.</li>
-              </ul>
+                {{#if oLevel.gradeA}}
+                
+                  <h3>All Practical Computers</h3>
+                  <ul>
+                      <li>Store the operations and other data in separate memory addresses</li>
+                      <li>One operation or number in each space in RAM</li>
+                      <li>There will be an instruction which means Add (+), this will take the current number (the Accumulator) and add it to the number in the next RAM address.</li>
+                  </ul>
+                  {{else}}
+                
+                  <h3>All Practical Computers</h3>
+                  <ul>
+                      <li>Store the operations and other data in separate memory addresses</li>
+                      <li>One operation or number in each space in RAM</li>
+                      <li>There will be an instruction which means Add (+), this will take the current number and add it to the number in the next RAM address.</li>
+                  </ul>
+                {{/if}}
+              
               {{/if}}
               
               {{#if oLevel.gradeA}}
