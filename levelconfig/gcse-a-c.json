@@ -1,7 +1,7 @@
 [
     {
         "sLevelName":"The Basic Idea",
-        "sGrade":"Grade 5",
+        "sGrade":"C",
         "gradeAA": false,
         "gradeA": false,
         "gradeB": false,
@@ -23,7 +23,7 @@
     },
     {
         "sLevelName":"The Idea",
-        "sGrade":"Grade 6",
+        "sGrade":"B",
         "gradeAA": false,
         "gradeA": false,
         "gradeB": true,
@@ -47,7 +47,7 @@
     },
     {
         "sLevelName":"Von Neuman",
-        "sGrade":"Grade 7",
+        "sGrade":"A",
         "gradeAA": false,
         "gradeA": true,
         "gradeB": true,
@@ -57,7 +57,7 @@
         "sTemplate":"operation2col",
         "fetch":"Go to the next classroom (RAM address) in 'Your Program' & read the data on the door.  Write it in the 'Data' column.",
         "decode":"Look up what the data on the door means in the 'Instruction Set' either an OP Code for a maths Operation or an Operand (number), depending what you expect next, starting with an operation.\nWrite it in the 'Operation' or 'Operand' column.",
-        "execute":"If you have decoded an operation keep it until you decode an Operand (number) then perform that calculation. Write the result in the 'Accumulator' column.",
+        "execute":"If you have decoded an operation keep it until you decode an Operand (number) then perform that calculation. Write the result in the 'Current Number' column.",
         "aInstructions":[
             {"operation":"+", "operand":10},
             {"operation":"-", "operand":11},
@@ -71,7 +71,7 @@
     },
     {
         "sLevelName":"Proper CPU",
-        "sGrade":"Grade 8",
+        "sGrade":"A*",
         "gradeAA": true,
         "gradeA": true,
         "gradeB": true,
@@ -81,7 +81,7 @@
         "sTemplate":"operation2col",
         "fetch":"Go to the next classroom (RAM address) in 'Your Program' & read the data on the door.  Write it in the 'Data' column.",
         "decode":"Look up what the data on the door means in the 'Instruction Set' either an OP Code for an Operation or a number (Operand), depending what you expect next, starting with an operation.\nWrite it in the 'Operation' or 'Operand' column.",
-        "execute":"If you have decoded an operation that needs an Operand (number) keep it until you decode an Operand (number) then perform that calculation. Write the result in the 'Accumulator' column.",
+        "execute":"If you have decoded an operation that needs an Operand (number) keep it until you decode an Operand (number) then perform that calculation. Write the result in the 'Current Number' column.",
         "aInstructions":[
             {"operation":"+", "operand":10, "limit":1},
             {"operation":"-", "operand":11, "limit":1},
